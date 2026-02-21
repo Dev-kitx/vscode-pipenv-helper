@@ -1,0 +1,100 @@
+{
+  "name": "pipenv-helper",
+  "displayName": "Pipenv Helper",
+  "description": "PyCharm-like Pipenv UX: detect Pipfile, create/sync env, set interpreter, prompt on lock changes.",
+  "version": "0.0.1",
+  "publisher": "Dev-kitx",
+  "engines": {
+    "vscode": "^1.85.0"
+  },
+  "categories": [
+    "Programming Languages"
+  ],
+  "pricing": "Free",
+  "activationEvents": [
+    "workspaceContains:Pipfile"
+  ],
+  "main": "./dist/extension.js",
+  "contributes": {
+    "commands": [
+      {
+        "command": "pipenvHelper.setup",
+        "title": "Pipenv: Setup (Create/Select Env + Sync)"
+      },
+      {
+        "command": "pipenvHelper.lock",
+        "title": "Pipenv: Lock Dependencies"
+      },
+      {
+        "command": "pipenvHelper.sync",
+        "title": "Pipenv: Sync Environment (Install from Lock)"
+      },
+      {
+        "command": "pipenvHelper.selectInterpreter",
+        "title": "Pipenv: Use Pipenv Interpreter"
+      },
+      {
+        "command": "pipenvHelper.statusActions",
+        "title": "Pipenv: Status Actions"
+      },
+      {
+        "command": "pipenvHelper.activateVenv",
+        "title": "Pipenv: Activate Environment in Terminal"
+      }
+    ],
+    "configuration": {
+      "title": "Pipenv Helper",
+      "properties": {
+        "pipenvHelper.autoPromptOnOpen": {
+          "type": "boolean",
+          "default": true,
+          "description": "Prompt to setup Pipenv when a workspace with Pipfile is opened."
+        },
+        "pipenvHelper.autoPromptOnChange": {
+          "type": "boolean",
+          "default": true,
+          "description": "Prompt to lock/sync when Pipfile or Pipfile.lock changes."
+        },
+        "pipenvHelper.preferLockfile": {
+          "type": "boolean",
+          "default": true,
+          "description": "Prefer Pipfile.lock (pipenv sync) over Pipfile install."
+        }
+      }
+    }
+  },
+  "scripts": {
+    "typecheck": "tsc -p . --noEmit",
+    "bundle": "node esbuild.js",
+    "vscode:prepublish": "npm run typecheck && npm run bundle",
+    "watch": "tsc -watch -p .",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:coverage": "vitest run --coverage",
+    "deploy": "vsce publish"
+  },
+  "devDependencies": {
+    "@types/node": "^20.19.33",
+    "@types/vscode": "^1.109.0",
+    "@vitest/coverage-v8": "^4.0.18",
+    "@vscode/vsce": "^3.7.1",
+    "esbuild": "^0.27.3",
+    "typescript": "^5.9.3",
+    "vitest": "^4.0.18"
+  },
+  "keywords": [
+    "vscode",
+    "extension",
+    "pipenv",
+    "python",
+    "virtualenv",
+    "dependency management",
+    "dev tools"
+  ],
+  "author": "akashb",
+  "license": "MIT",
+  "galleryBanner": {
+    "color": "#0f172a",
+    "theme": "dark"
+  }
+}
