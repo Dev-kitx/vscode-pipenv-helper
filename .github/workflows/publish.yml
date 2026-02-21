@@ -3,8 +3,16 @@ name: Release (manual)
 on:
   workflow_dispatch:
     inputs:
+      release_mode:
+        description: "Release mode"
+        type: choice
+        required: true
+        default: first
+        options:
+          - first      # publish current package.json version (e.g., 0.0.1)
+          - bump       # bump version then publish
       bump:
-        description: "Version bump"
+        description: "Version bump (used only when release_mode=bump)"
         type: choice
         required: true
         default: patch
@@ -54,9 +62,22 @@ jobs:
 
       # Bump version + tag (creates vX.Y.Z)
       - name: Bump version (commit + tag)
+        if: ${{ inputs.release_mode == 'bump' }}
         run: |
           npm version "${{ inputs.bump }}" -m "chore(release): v%s"
 
+      # For first release (no bump), create tag v<current package.json version>
+      - name: Tag current version (no bump)
+        if: ${{ inputs.release_mode == 'first' }}
+        shell: bash
+        run: |
+          VER="$(node -p "require('./package.json').version")"
+          TAG="v$VER"
+          echo "Tagging current version: $TAG"
+          # fail if tag already exists
+          git rev-parse "$TAG" >/dev/null 2>&1 && { echo "Tag $TAG already exists"; exit 1; }
+          git tag "$TAG" -m "$TAG"
+ 
       - name: Bundle
         run: npm run bundle
 
