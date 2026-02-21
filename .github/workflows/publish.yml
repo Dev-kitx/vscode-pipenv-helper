@@ -60,6 +60,10 @@ jobs:
       - name: Bundle
         run: npm run bundle
 
+      # Package VSIX (optional but nice)
+      - name: Package VSIX
+        run: npx @vscode/vsce package
+
       - name: Get VSIX filename
         id: vsix
         shell: bash
