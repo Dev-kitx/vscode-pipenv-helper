@@ -2,7 +2,7 @@
   "name": "pipenv-helper",
   "displayName": "Pipenv Helper",
   "description": "PyCharm-like Pipenv UX: detect Pipfile, create/sync env, set interpreter, prompt on lock changes.",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "publisher": "Dev-kitx",
   "engines": {
     "vscode": "^1.109.0"
