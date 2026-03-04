@@ -25,7 +25,18 @@ function execCmd(
   output?: vscode.OutputChannel
 ): Promise<ExecResult> {
   return new Promise((resolve) => {
-    const child = spawn(cmd, args, { cwd, shell: true, env: process.env });
+    // On macOS/Linux, run through a login shell so that PATH shims (pyenv, asdf,
+    // pipx, etc.) set in .zprofile / .bash_profile are visible to the process.
+    let child;
+    if (isWindows()) {
+      child = spawn(cmd, args, { cwd, shell: true, env: process.env });
+    } else {
+      const shell = process.env.SHELL || "/bin/sh";
+      const quotedArgs = [cmd, ...args]
+        .map((a) => `'${a.replace(/'/g, "'\\''")}'`)
+        .join(" ");
+      child = spawn(shell, ["-l", "-c", quotedArgs], { cwd, env: process.env });
+    }
 
     let stdout = "";
     let stderr = "";
@@ -310,7 +321,17 @@ export function activate(context: vscode.ExtensionContext) {
       return;
     }
 
-    await fn();
+    await vscode.window.withProgress(
+      {
+        location: vscode.ProgressLocation.Notification,
+        title: "Pipenv Helper",
+        cancellable: false,
+      },
+      async (progress) => {
+        progress.report({ message: "Running…" });
+        await fn();
+      }
+    );
   };
 
   // Status bar actions (click)
