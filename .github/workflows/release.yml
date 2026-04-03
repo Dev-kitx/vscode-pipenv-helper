@@ -1,0 +1,58 @@
+name: Release
+
+# Watches commits pushed to main.
+# Maintains a "Release PR" that bumps the version in package.json
+# and auto-generates a CHANGELOG from conventional commit messages.
+#
+# When you merge the Release PR:
+#   - smart-gh-release creates the git tag and GitHub Release
+#   - That "release published" event triggers publish.yml automatically
+#
+# CONVENTIONAL COMMITS (determines version bump)
+# ───────────────────────────────────────────────
+#   feat: ...          → minor bump  (0.1.0 → 0.2.0)
+#   fix: ...           → patch bump  (0.1.0 → 0.1.1)
+#   feat!: ...         → major bump  (0.1.0 → 1.0.0)
+#   BREAKING CHANGE:   → major bump
+#   chore/docs/style   → no release PR update
+#
+# SETUP REQUIRED (one-time)
+# ──────────────────────────
+# Create a GitHub App and add to repo:
+#   vars.APP_ID      — the app's numeric ID
+#   secrets.PRIVATE_KEY — the app's private key (PEM)
+
+on:
+  push:
+    branches: [main]
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  release:
+    name: Release Please
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Generate GitHub App token
+        uses: actions/create-github-app-token@v3
+        id: app-token
+        with:
+          app-id: ${{ vars.APP_ID }}
+          private-key: ${{ secrets.PRIVATE_KEY }}
+
+      - uses: Dev-kitx/smart-gh-release@v1
+        id: release
+        with:
+          token: ${{ steps.app-token.outputs.token }}
+          auto_version: true
+          auto_release: false
+          include_contributors: true
+
+      - name: Summary
+        run: |
+          echo "Tag:  ${{ steps.release.outputs.tag_name }}"
+          echo "Bump: ${{ steps.release.outputs.bump_level }}"
+          echo "URL:  ${{ steps.release.outputs.release_url }}"

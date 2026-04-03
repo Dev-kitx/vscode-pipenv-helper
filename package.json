@@ -16,6 +16,40 @@
   ],
   "main": "./dist/extension.js",
   "contributes": {
+    "views": {
+      "explorer": [
+        {
+          "id": "pipenvPackages",
+          "name": "Pipenv Packages"
+        }
+      ]
+    },
+    "menus": {
+      "view/title": [
+        {
+          "command": "pipenvHelper.refreshPackages",
+          "when": "view == pipenvPackages",
+          "group": "navigation@2"
+        },
+        {
+          "command": "pipenvHelper.addPackage",
+          "when": "view == pipenvPackages",
+          "group": "navigation@1"
+        }
+      ],
+      "view/item/context": [
+        {
+          "command": "pipenvHelper.addPackage",
+          "when": "view == pipenvPackages && viewItem == category",
+          "group": "inline"
+        },
+        {
+          "command": "pipenvHelper.uninstallPackage",
+          "when": "view == pipenvPackages && (viewItem == package || viewItem == devPackage)",
+          "group": "inline"
+        }
+      ]
+    },
     "commands": [
       {
         "command": "pipenvHelper.setup",
@@ -40,6 +74,45 @@
       {
         "command": "pipenvHelper.activateVenv",
         "title": "Pipenv: Activate Environment in Terminal"
+      },
+      {
+        "command": "pipenvHelper.check",
+        "title": "Pipenv: Check Vulnerabilities"
+      },
+      {
+        "command": "pipenvHelper.update",
+        "title": "Pipenv: Update Packages"
+      },
+      {
+        "command": "pipenvHelper.clean",
+        "title": "Pipenv: Clean Unused Packages"
+      },
+      {
+        "command": "pipenvHelper.exportRequirements",
+        "title": "Pipenv: Export requirements.txt"
+      },
+      {
+        "command": "pipenvHelper.openPipfile",
+        "title": "Pipenv: Open Pipfile"
+      },
+      {
+        "command": "pipenvHelper.showInfo",
+        "title": "Pipenv: Environment Info"
+      },
+      {
+        "command": "pipenvHelper.refreshPackages",
+        "title": "Refresh",
+        "icon": "$(refresh)"
+      },
+      {
+        "command": "pipenvHelper.addPackage",
+        "title": "Add Package",
+        "icon": "$(add)"
+      },
+      {
+        "command": "pipenvHelper.uninstallPackage",
+        "title": "Uninstall",
+        "icon": "$(trash)"
       }
     ],
     "configuration": {
@@ -59,6 +132,21 @@
           "type": "boolean",
           "default": true,
           "description": "Prefer Pipfile.lock (pipenv sync) over Pipfile install."
+        },
+        "pipenvHelper.showPythonVersion": {
+          "type": "boolean",
+          "default": true,
+          "description": "Show the Python version in the status bar (e.g. Pipenv 3.11  synced)."
+        },
+        "pipenvHelper.autoLockOnPipfileSave": {
+          "type": "boolean",
+          "default": false,
+          "description": "Automatically run pipenv lock when Pipfile is saved, without prompting."
+        },
+        "pipenvHelper.pipenvPath": {
+          "type": "string",
+          "default": "",
+          "description": "Absolute path to the pipenv executable. Leave empty to auto-detect. Use this if pipenv is not found (run 'which pipenv' in your terminal to get the path)."
         }
       }
     }

@@ -1,138 +1,147 @@
-# Pipenv Helper for VS Code 🐍
+# Pipenv Helper for VS Code
 
 Bring **PyCharm-like Pipenv support** to Visual Studio Code.
 
-**Pipenv Helper** detects `Pipfile` projects, manages Pipenv virtual environments, keeps your environment in sync with `Pipfile.lock`, and integrates cleanly with the VS Code Python extension — without shell hacks or surprises.
+Detects `Pipfile` projects, manages virtual environments, keeps your environment in sync with `Pipfile.lock`, and integrates cleanly with the VS Code Python extension.
 
 ---
 
-## 📦 Requirements
+## Requirements
 
-- pipenv available on PATH
-- VS Code Python extension recommended
-
-## ✨ Features
-
-### 🔍 Automatic Pipenv Detection
-
-- Activates when a `Pipfile` is present
-- Detects whether a Pipenv virtual environment exists
-- Offers to create one if missing
+- [pipenv](https://pipenv.pypa.io) installed on your system
+- VS Code Python extension (recommended, for interpreter integration)
 
 ---
 
-### 🧠 Smart Environment Sync
+## Features
 
-- Detects when `Pipfile.lock` changes
-- Tracks lockfile hashes to prevent repeated prompts
-- Clearly shows when your environment is:
-  - **Synced**
-  - **Out of sync**
-  - **Missing a lockfile**
+### Status Bar
 
----
+A persistent indicator in the status bar shows your environment state at a glance:
 
-### 📊 Status Bar Integration
+| State | Display |
+|---|---|
+| In sync | `✔ Pipenv 3.11  synced` |
+| Out of sync | `⚠ Pipenv 3.11  out of sync` |
+| No lockfile | `⚠ Pipenv  no lock` |
+| Busy | `↻ Pipenv  syncing…` |
 
-A persistent status indicator appears in the VS Code status bar: **Pipenv: my-project   ✔ synced**
-
-Click it to access quick actions:
-
-- Activate environment in terminal
-- Sync environment
-- Lock dependencies
-- Recreate environment
-- Use Pipenv interpreter
+Click it to open the quick-action menu.
 
 ---
 
-### 🖥️ Activate Virtualenv in Terminal (One Click)
+### Packages Sidebar
 
-Activate the Pipenv virtual environment **in your current terminal** with a single click.
+A **Pipenv Packages** panel appears in the Explorer sidebar showing your direct dependencies (from `Pipfile`) with their installed versions (from `Pipfile.lock`), grouped by regular and dev.
 
-- Uses standard virtualenv activation
-- No `pipenv shell`
-- No subshells
-- No surprise behavior
-
-This matches how **PyCharm** and the **VS Code Python extension** work internally.
-
----
-
-### 🐍 Python Interpreter Auto-Configuration
-
-- Automatically sets `python.defaultInterpreterPath`
-- Works with:
-  - Linting
-  - Debugging
-  - Testing
-  - Tasks
-- New terminals activate the environment automatically (via VS Code Python extension)
-
----
-
-## 🚀 How It Works
-
-| Action                    | Who Handles It           |
-|---------------------------|--------------------------|
-| Create virtualenv         | Pipenv                   |
-| Select Python interpreter | Pipenv Helper            |
-| Activate terminal         | VS Code Python extension |
-| Dependency locking        | Pipenv                   |
-| Sync enforcement          | Pipenv Helper            |
-
-No shell hijacking. No opinionated workflows.
-
----
-
-## ⚙️ Commands
-
-Available via Command Palette or Status Bar:
-
-- **Pipenv: Setup Environment**
-- **Pipenv: Sync Environment**
-- **Pipenv: Lock Dependencies**
-- **Pipenv: Select Interpreter**
-- **Pipenv: Activate Environment in Terminal**
-
----
-
-## ⚡ Configuration
-
-```json
-{
-  "pipenvHelper.preferLockfile": true,
-  "pipenvHelper.autoPromptOnOpen": true,
-  "pipenvHelper.autoPromptOnChange": true
-}
+```
+PIPENV PACKAGES
+  ▾ Packages  (3)
+      flask      3.0.3
+      numpy      1.26.4
+      requests   2.31.0
+  ▾ Dev Packages  (2)
+      black      24.4.2
+      pytest      8.2.0
 ```
 
-## Settings Explained
+- **+** button — add a package (prompts for name, then Regular or Dev)
+- **Hover** over a package — trash icon appears to uninstall it
+- **Refresh** button — reload from disk
+- Auto-refreshes whenever `Pipfile.lock` changes
 
-| Setting              | Description                          |
-|----------------------|--------------------------------------|
-| `preferLockfile`     | Prefer syncing from `Pipfile.lock`   |
-| `autoPromptOnOpen`   | Prompt on workspace open             |
-| `autoPromptOnChange` | Prompt when `Pipfile` / lock changes |
+---
 
+### Smart Sync Detection
 
+- Tracks `Pipfile.lock` via SHA-256 hash
+- Prompts to sync when the lockfile changes
+- Avoids duplicate prompts for the same lockfile state
+- Auto-prompts on workspace open (configurable)
 
-## Run locally
+---
 
-1. `npm install`
-2. `npm run compile`
-3. Open this folder in VS Code
-4. Press `F5` to launch Extension Development Host
+### Python Interpreter Integration
 
-## Testing
+- Automatically sets `python.defaultInterpreterPath` to the Pipenv venv
+- Works with linting, debugging, testing, and tasks
+- Python version shown in the status bar once detected
 
-- `npm test` to run tests once
-- `npm run test:watch` for watch mode
+---
+
+### Terminal Activation
+
+Activates the Pipenv environment in your current terminal with one click — using standard `source .../bin/activate`, not `pipenv shell`. No subshells, no surprises.
+
+---
 
 ## Commands
 
-- Pipenv: Activate environment in terminal
-- Pipenv: Setup (Create/Select Env + Sync)
-- Pipenv: Lock Dependencies
-- Pipenv: Sync Environment (Install from Lock)
-- Pipenv: Use Pipenv Interpreter
+Available via the Command Palette (`Cmd+Shift+P`) — type `Pipenv:`:
+
+| Command | Description |
+|---|---|
+| `Pipenv: Setup` | Create env, set interpreter, lock & sync |
+| `Pipenv: Sync Environment` | Run `pipenv sync --dev` |
+| `Pipenv: Lock Dependencies` | Run `pipenv lock` |
+| `Pipenv: Update Packages` | Run `pipenv update --dev` |
+| `Pipenv: Check Vulnerabilities` | Run `pipenv check` |
+| `Pipenv: Clean Unused Packages` | Run `pipenv clean` |
+| `Pipenv: Export requirements.txt` | Export via `pipenv requirements` |
+| `Pipenv: Open Pipfile` | Open `Pipfile` in the editor |
+| `Pipenv: Environment Info` | Show Python version, venv path, package count |
+| `Pipenv: Use Pipenv Interpreter` | Set the Pipenv Python as the workspace interpreter |
+| `Pipenv: Activate Environment in Terminal` | Source the venv in the active terminal |
+| `Pipenv: Status Actions` | Open the quick-action menu (same as clicking the status bar) |
+
+---
+
+## Configuration
+
+| Setting | Default | Description |
+|---|---|---|
+| `pipenvHelper.autoPromptOnOpen` | `true` | Prompt to setup when a Pipfile workspace is opened |
+| `pipenvHelper.autoPromptOnChange` | `true` | Prompt to lock/sync when `Pipfile` or `Pipfile.lock` changes |
+| `pipenvHelper.preferLockfile` | `true` | Prefer `pipenv sync` over `pipenv install` during setup |
+| `pipenvHelper.showPythonVersion` | `true` | Show Python version in the status bar |
+| `pipenvHelper.autoLockOnPipfileSave` | `false` | Automatically run `pipenv lock` when `Pipfile` is saved |
+| `pipenvHelper.pipenvPath` | `""` | Absolute path to pipenv executable — set this if pipenv is not found |
+
+---
+
+## Troubleshooting
+
+### pipenv not found
+
+VS Code launches in a limited environment that may not include paths set up in your shell config (`.zshrc`, `.zprofile`, etc.).
+
+The extension automatically checks common locations:
+- `/opt/homebrew/bin` (Apple Silicon Homebrew)
+- `/usr/local/bin` (Intel Homebrew)
+- `~/.local/bin` (pip install --user)
+- `~/.pyenv/shims` (pyenv)
+- `~/.asdf/shims` (asdf)
+
+If pipenv is still not found, run `which pipenv` in your terminal and set the result in settings:
+
+```json
+{
+  "pipenvHelper.pipenvPath": "/opt/homebrew/bin/pipenv"
+}
+```
+
+Or open the error notification and click **Set Path** to jump directly to the setting.
+
+---
+
+## Development
+
+```bash
+npm install
+npm run bundle     # build once
+npm run watch      # rebuild on save
+npm test           # run tests
+npm run test:watch # watch mode
+```
+
+Press **F5** in VS Code to launch the Extension Development Host with the extension loaded. Open a folder containing a `Pipfile` to activate it.
