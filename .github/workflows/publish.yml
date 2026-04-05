@@ -1,115 +1,11 @@
-name: Publish to Marketplace
-
-# Triggered automatically when a GitHub Release is published
-# (i.e. when the Release PR created by release.yml is merged).
-#
-# ROLLBACK STRATEGY
-# ──────────────────
-# The VS Code Marketplace does not support unpublishing a version.
-# Options if something goes wrong:
-#
-#   1. PATCH RELEASE (preferred)
-#      Fix the bug, merge a fix commit, let release.yml cut a new patch release.
-#
-#   2. UNPUBLISH EXTENSION (last resort)
-#      Use `vsce unpublish` — removes the entire extension, not just one version.
-#      Only do this for critical security issues.
-#
-# SETUP REQUIRED (one-time)
-# ──────────────────────────
-# Add to repo secrets:
-#   VSCE_PAT — Personal Access Token from https://marketplace.visualstudio.com
+name: Publish to VSCODE Marketplace
 
 on:
   release:
     types: [published]
-
   workflow_dispatch:
 
 jobs:
-  # ── 1. Tests must pass before we touch the marketplace ───────────────────
-  test:
-    name: Tests (pre-publish gate)
-    runs-on: ubuntu-latest
-
-    steps:
-      - uses: actions/checkout@v6
-
-      - uses: actions/setup-node@v6
-        with:
-          node-version: 22
-          cache: npm
-
-      - name: Install dependencies
-        run: npm ci
-
-      - name: Typecheck
-        run: npm run typecheck
-
-      - name: Test
-        run: npm test
-
-  # ── 2. Build VSIX and publish ─────────────────────────────────────────────
   publish:
-    name: Build & Publish
-    needs: test
-    runs-on: ubuntu-latest
-    permissions:
-      contents: write   # needed to upload VSIX to the GitHub Release
-
-    steps:
-      - uses: actions/checkout@v6
-
-      - uses: actions/setup-node@v6
-        with:
-          node-version: 22
-          cache: npm
-
-      - name: Install dependencies
-        run: npm ci
-
-      - name: Sync version from release tag
-        if: github.event_name == 'release'
-        run: |
-          VERSION="${{ github.event.release.tag_name }}"
-          npm version "${VERSION#v}" --no-git-tag-version --allow-same-version
-
-      - name: Configure git
-        if: github.event_name == 'release'
-        run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
-
-      - name: Bundle
-        run: npm run bundle
-
-      - name: Package VSIX
-        run: npx @vscode/vsce package
-
-      - name: Get VSIX filename
-        id: vsix
-        run: |
-          VSIX="$(ls -1 *.vsix | head -n 1)"
-          echo "vsix=$VSIX" >> "$GITHUB_OUTPUT"
-          echo "Packaged: $VSIX"
-
-      - name: Publish to VS Code Marketplace
-        run: npx @vscode/vsce publish --packagePath "${{ steps.vsix.outputs.vsix }}"
-        env:
-          VSCE_PAT: ${{ secrets.VSCE_PAT }}
-
-      - name: Upload VSIX to GitHub Release
-        if: github.event_name == 'release'
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          gh release upload "${{ github.event.release.tag_name }}" \
-            "${{ steps.vsix.outputs.vsix }}"
-
-      - name: Commit package.json version bump to main
-        if: github.event_name == 'release'
-        run: |
-          git add package.json
-          git diff --staged --quiet && exit 0
-          git commit -m "chore: bump package.json to ${{ github.event.release.tag_name }} [skip ci]"
-          git push origin HEAD:main
+    uses: Dev-kitx/.github/.github/workflows/vscode-extension-release.yml@main
+    secrets: inherit
