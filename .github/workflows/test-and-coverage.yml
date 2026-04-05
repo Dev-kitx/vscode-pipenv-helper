@@ -1,0 +1,27 @@
+name: Run tests and upload to Codecov
+
+on:
+  push:
+    branches: [main]
+    paths-ignore:
+      - 'README.md'
+      - 'CHANGELOG.md'
+      - 'codecov.yml'
+  pull_request:
+    branches: [main]
+    paths-ignore:
+      - 'README.md'
+      - 'CHANGELOG.md'
+      - 'codecov.yml'
+  workflow_dispatch:
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  ci:
+    uses: Dev-kitx/.github/.github/workflows/run-npm-vite-tests.yml@main
+    secrets: inherit
+    with:
+      codecov_slug: Dev-Kitx/vscode-pipenv-helper
