@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+
+## [v0.1.1] - 2026-04-05
+
+### 📦 Build
+
+- use reusable workflows (#13) ([01912c1](https://github.com/Dev-kitx/vscode-pipenv-helper/commit/01912c155ec3494e2224cd2b7333d0ca0ebe8d5e)) by @aakashbasa
+
 ## [v0.1.0] - 2026-04-03
 
 ### ✨ Features
