@@ -1,5 +1,11 @@
 # Pipenv Helper for VS Code
 
+[![Latest Release](https://img.shields.io/endpoint?url=https%3A%2F%2Fraw.githubusercontent.com%2FDev-kitx%2Fvscode-pipenv-helper%2Fmain%2F.github%2Fbadges%2Frelease.json)](https://github.com/Dev-kitx/vscode-pipenv-helper/releases/latest)
+[![Visual Studio Marketplace Version](https://img.shields.io/visual-studio-marketplace/v/Dev-kitx.pipenv-helper?label=VS%20Marketplace&logo=visualstudiocode)](https://marketplace.visualstudio.com/items?itemName=Dev-kitx.pipenv-helper)
+[![Visual Studio Marketplace Installs](https://img.shields.io/visual-studio-marketplace/i/Dev-kitx.pipenv-helper)](https://marketplace.visualstudio.com/items?itemName=Dev-kitx.pipenv-helper)
+[![codecov](https://codecov.io/gh/Dev-Kitx/vscode-pipenv-helper/branch/main/graph/badge.svg)](https://codecov.io/gh/Dev-Kitx/vscode-pipenv-helper)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+
 Bring **PyCharm-like Pipenv support** to Visual Studio Code.
 
 Detects `Pipfile` projects, manages virtual environments, keeps your environment in sync with `Pipfile.lock`, and integrates cleanly with the VS Code Python extension.
