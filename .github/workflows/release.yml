@@ -1,4 +1,4 @@
-name: Release 
+name: Create GitHub Release
 
 # Watches commits pushed to main.
 # Maintains a "Release PR" that bumps the version in package.json
@@ -34,30 +34,10 @@ permissions:
   pull-requests: write
 
 jobs:
-  release:
-    name: Release Please
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Generate GitHub App token
-        uses: actions/create-github-app-token@v3
-        id: app-token
-        with:
-          app-id: ${{ vars.APP_ID }}
-          private-key: ${{ secrets.PRIVATE_KEY }}
-
-      - uses: Dev-kitx/smart-gh-release@v1
-        id: release
-        with:
-          token: ${{ steps.app-token.outputs.token }}
-          auto_version: true
-          auto_release: false
-          generate_badge: true
-          bump_version_in_files: |
-            package.json
-
-      - name: Summary
-        run: |
-          echo "Tag:  ${{ steps.release.outputs.tag_name }}"
-          echo "Bump: ${{ steps.release.outputs.bump_level }}"
-          echo "URL:  ${{ steps.release.outputs.release_url }}"
+  create-release-pr:
+    name: Create Release PR
+    uses: Dev-kitx/.github/.github/workflows/github-release.yml@main
+    secrets: inherit
+    with:
+      bump_version_in_files: |
+        package.json
