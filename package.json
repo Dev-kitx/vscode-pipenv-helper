@@ -4,6 +4,14 @@
   "description": "PyCharm-like Pipenv UX: detect Pipfile, create/sync env, set interpreter, prompt on lock changes.",
   "version": "0.1.1",
   "publisher": "Dev-kitx",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/Dev-kitx/vscode-pipenv-helper"
+    },
+    "bugs": {
+        "url": "https://github.com/Dev-kitx/vscode-pipenv-helper/issues"
+    },
+    "homepage": "https://github.com/Dev-kitx/vscode-pipenv-helper#readme",
   "engines": {
     "vscode": "^1.116.0"
   },
