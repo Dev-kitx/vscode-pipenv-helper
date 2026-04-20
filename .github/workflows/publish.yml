@@ -6,6 +6,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  publish:
+  publish-vscode-extension:
+    name: Publish VSCode Extension
     uses: Dev-kitx/.github/.github/workflows/vscode-extension-release.yml@main
     secrets: inherit

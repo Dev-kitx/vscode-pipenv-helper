@@ -20,7 +20,8 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  ci:
+  run-tests-and-upload-coverage:
+    name: Run tests and upload to Codecov
     uses: Dev-kitx/.github/.github/workflows/run-npm-vite-tests.yml@main
     secrets: inherit
     with:
