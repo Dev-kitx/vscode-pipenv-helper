@@ -4,6 +4,13 @@ All notable changes to this project will be documented in this file.
 
 
 
+
+## [v0.1.3] - 2026-06-06
+
+### 🔧 Maintenance
+
+- **deps**: combined dependabot dependency updates (#38) ([3549439](https://github.com/Dev-kitx/vscode-pipenv-helper/commit/3549439d48377236fc2399cf7f31f8240e929f58)) by @aakashbasa
+
 ## [v0.1.2] - 2026-04-20
 
 ### 🐛 Bug Fixes
